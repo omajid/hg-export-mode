@@ -12,18 +12,23 @@
 
 (defvar hg-export-mode-hook nil)
 
-(define-derived-mode
-  hg-export-mode diff-mode "HG/Export"
+(define-derived-mode hg-export-mode diff-mode "HG/Export"
   "Major mode for working with hg's export/patch files"
   (let ((hg-export-date-regexp "^# Date \\([0-9]+\\) \\([0-9]+\\)")
 	(show-time
 	 (lambda ()
-	   (put-text-property (match-beginning 1)
-			      (match-end 1)
-			      'display (format-time-string
-					"%Y-%m-%d"
-					(seconds-to-time
-					 (string-to-number (match-string 1))))))))
+	   (progn
+	     (put-text-property (match-beginning 1)
+				(match-end 1)
+				'display (format-time-string
+					  "%Y-%m-%dT%T%z"
+					  (seconds-to-time
+					   (+ (string-to-number (match-string 1))
+					      (string-to-number (match-string 2))))
+					  1))
+	     (put-text-property (match-beginning 2)
+				(match-end 2)
+				'display "")))))
     (font-lock-add-keywords
      nil
      `((,hg-export-date-regexp . (,show-time))))))
