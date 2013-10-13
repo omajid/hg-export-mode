@@ -28,7 +28,7 @@
   "Major mode for working with hg's export/patch files"
   (let ((hg-export-date-regexp "^# Date \\([0-9]+\\) \\([0-9]+\\)")
 	(hg-export-user-regexp "^\\(# User \\)\\(.*\\)$")
-	(show-time
+	(display-as-time
 	 (lambda ()
 	   (progn
 	     (put-text-property (match-beginning 1)
@@ -44,7 +44,7 @@
 				'display "")))))
     (font-lock-add-keywords
      nil
-     `((,hg-export-date-regexp . (,show-time))
+     `((,hg-export-date-regexp . (,display-as-time))
        (,hg-export-user-regexp (1 'font-lock-comment-face)
 			       (2 hg-export-user-face))))))
 
