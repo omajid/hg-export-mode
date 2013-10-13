@@ -12,9 +12,22 @@
 
 (defvar hg-export-mode-hook nil)
 
+(defvar hg-export-user-face 'hg-export-user-face)
+
+(defgroup hg-export-faces nil
+  "Faces used in HG/Export mode"
+  :group 'hg-export
+  :group 'faces)
+
+(defface hg-export-user-face
+  '((t (:inherit font-lock-variable-name-face :weight bold)))
+  "Face for user names"
+  :group 'hg-export-faces)
+
 (define-derived-mode hg-export-mode diff-mode "HG/Export"
   "Major mode for working with hg's export/patch files"
   (let ((hg-export-date-regexp "^# Date \\([0-9]+\\) \\([0-9]+\\)")
+	(hg-export-user-regexp "^\\(# User \\)\\(.*\\)$")
 	(show-time
 	 (lambda ()
 	   (progn
@@ -31,7 +44,9 @@
 				'display "")))))
     (font-lock-add-keywords
      nil
-     `((,hg-export-date-regexp . (,show-time))))))
+     `((,hg-export-date-regexp . (,show-time))
+       (,hg-export-user-regexp (1 'font-lock-comment-face)
+			       (2 hg-export-user-face))))))
 
 
 (provide 'hg-export-mode)
